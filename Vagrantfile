@@ -49,7 +49,7 @@ Vagrant.configure(2) do |config|
       ansible.limit = "all"
     end
   else
-    config.vm.provision :shell, path: "ansible/windows.sh", args: [CONF['hostname']]
+    config.vm.provision :shell, path: "ansible/install.sh", args: [CONF['hostname']]
   end      
 
 end

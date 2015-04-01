@@ -1,0 +1,21 @@
+---
+- name: Add ppa Repository
+  sudo: yes
+  apt_repository: repo=ppa:ondrej/{{ php.version }}
+
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: Install php5-fpm
+  sudo: yes
+  apt: pkg=php5-fpm state=latest
+
+- name: Install Common php Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - php5-cli
+    - php5-curl
+    - php5-mcrypt
+    - php5-mysql
