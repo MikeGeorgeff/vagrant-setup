@@ -23,3 +23,7 @@ mysql:
    user: mike
    password: password
    database: database
+
+# Git Config
+git_name: Mike Georgeff
+git_email: mikegeorgeff3@gmail.com

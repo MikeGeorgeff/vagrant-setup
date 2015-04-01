@@ -52,4 +52,11 @@ Vagrant.configure(2) do |config|
     config.vm.provision :shell, path: "ansible/install.sh", args: [CONF['hostname']]
   end      
 
+  # Git Config
+  git_name = CONF['git_name']
+  git_email = CONF['git_email']
+
+  config.vm.provision :shell, :inline => "echo 'Saving git username' && sudo -i -u vagrant git config --global user.name '#{git_name}'"
+  config.vm.provision :shell, :inline => "echo 'Saving git email' && sudo -i -u vagrant git config --global user.email '#{git_email}'"
+
 end
