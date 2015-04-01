@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+echo "Download and Install Ansible"
+
+# Update Repositories
+sudo apt-get update > /dev/null
+
+# Determine Ubuntu Version
+. /etc/lsb-release
+
+# Decide on package to install for `add-apt-repository` command
+#
+# USE_COMMON=1 when using a distribution over 12.04
+# USE_COMMON=0 when using a distribution at 12.04 or older
+USE_COMMON=$(echo "$DISTRIB_RELEASE > 12.04" | bc)
+
+if [ "$USE_COMMON" -eq "1" ];
+then
+    sudo apt-get install -y software-properties-common > /dev/null
+else
+    sudo apt-get install -y python-software-properties > /dev/null
+fi
+
+# Add Ansible Repository & Install Ansible
+sudo add-apt-repository -y ppa:ansible/ansible > /dev/null
+sudo apt-get update > /dev/null
+sudo apt-get install -y ansible > /dev/null
+
+# Setup Ansible for Local Use and Run
+cp /vagrant/ansible/inventories/dev /etc/ansible/hosts -f 
+chmod 666 /etc/ansible/hosts
+sudo ansible-playbook /vagrant/ansible/playbook.yml -e hostname=$1 --connection=local

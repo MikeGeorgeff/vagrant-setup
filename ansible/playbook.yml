@@ -1,0 +1,84 @@
+---
+- hosts: all
+  sudo: true
+
+  vars:
+    doc_root: /vagrant/www
+    servername: 192.168.30.30
+
+  tasks:
+  - name: Update apt
+    sudo: yes
+    apt: update_cache=yes
+
+  - name: Install System Packages
+    sudo: yes
+    apt: pkg={{ item }} state=latest
+    with_items:
+      - curl
+      - wget
+      - python-software-properties
+      - vim
+      - git
+
+  - name: Add ppa Repository
+    sudo: yes
+    apt_repository: repo=ppa:ondrej/php5-5.6
+
+  - name: Update apt
+    sudo: yes
+    apt: update_cache=yes
+
+  - name: Install Nginx
+    sudo: yes
+    apt: pkg=nginx state=latest
+
+  - name: Nginx Config
+    sudo: yes
+    template: src=templates/default.tpl dest=/etc/nginx/sites-available/default
+    notify: restart nginx
+
+  - name: Install php5-fpm
+    sudo: yes
+    apt: pkg=php5-fpm state=latest
+
+  - name: Install Common php Packages
+    sudo: yes
+    apt: pkg={{ item }} state=latest
+    with_items:
+      - php5-cli
+      - php5-curl
+      - php5-mcrypt
+      - php5-mysql
+
+  - name: MySQL | Install Packages
+    sudo: yes
+    apt: pkg={{ item }} state=latest
+    with_items:
+      - mysql-server
+      - mysql-client
+      - python-mysqldb
+
+  - name: MySQL | Update root password
+    mysql_user: name=root host={{ item }} check_implicit_admin=yes password=password login_user=root login_password=password
+    with_items: 
+      - georgeff
+      - 127.0.0.1
+      - ::1
+      - localhost
+
+  - name: MySQL | Create Database
+    mysql_db: name=georgeff state=present login_user=root login_password=password
+
+  - name: MySQL | Create User 
+    mysql_user: name=mike password=password priv=georgeff.*:ALL state=present login_user=root login_password=password
+
+  - name: Install Composer
+    shell: curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx enabled=yes state=restarted
+
+    - name: restart php5-fpm
+      service: name=php5-fpm enabled=yes state=restarted
