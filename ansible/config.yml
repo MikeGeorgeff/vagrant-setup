@@ -7,7 +7,7 @@ hostname: sandbox
 
 ip_address: 192.168.10.10
 
-memory: 512
+memory: 1024
 
 cpus: 1
 
