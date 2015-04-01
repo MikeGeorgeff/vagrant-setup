@@ -4,7 +4,7 @@ server {
     root {{ doc_root }};
     index index.html index.php;
 
-    server_name {{ servername }};
+    server_name {{ ip_address }};
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;

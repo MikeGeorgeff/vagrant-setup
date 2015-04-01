@@ -1,0 +1,25 @@
+---
+# Set the base box
+base_box: ubuntu/trusty64
+
+# Box Settings
+hostname: sandbox
+
+ip_address: 192.168.10.10
+
+memory: 512
+
+cpus: 1
+
+doc_root: /vagrant/www/public
+
+# PHP Settings
+php:
+   version: php5-5.6
+
+# MySQL Settings
+mysql:
+   root_password: password
+   user: mike
+   password: password
+   database: database

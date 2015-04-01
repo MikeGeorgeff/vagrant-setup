@@ -2,9 +2,8 @@
 - hosts: all
   sudo: true
 
-  vars:
-    doc_root: /vagrant/www
-    servername: 192.168.30.30
+  vars_files:
+    - config.yml
 
   tasks:
   - name: Update apt
@@ -23,7 +22,7 @@
 
   - name: Add ppa Repository
     sudo: yes
-    apt_repository: repo=ppa:ondrej/php5-5.6
+    apt_repository: repo=ppa:ondrej/{{ php.version }}
 
   - name: Update apt
     sudo: yes
@@ -60,18 +59,18 @@
       - python-mysqldb
 
   - name: MySQL | Update root password
-    mysql_user: name=root host={{ item }} check_implicit_admin=yes password=password login_user=root login_password=password
+    mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
     with_items: 
-      - georgeff
+      - "{{ hostname }}"
       - 127.0.0.1
       - ::1
       - localhost
 
   - name: MySQL | Create Database
-    mysql_db: name=georgeff state=present login_user=root login_password=password
+    mysql_db: name={{ mysql.database }} state=present login_user=root login_password={{ mysql.root_password }}
 
   - name: MySQL | Create User 
-    mysql_user: name=mike password=password priv=georgeff.*:ALL state=present login_user=root login_password=password
+    mysql_user: name={{ mysql.user }} password={{ mysql.password }} priv={{ mysql.database }}.*:ALL state=present login_user=root login_password={{ mysql.root_password }}
 
   - name: Install Composer
     shell: curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
