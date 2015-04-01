@@ -52,6 +52,20 @@ Vagrant.configure(2) do |config|
     config.vm.provision :shell, path: "ansible/install.sh", args: [CONF['hostname']]
   end      
 
+  # Hack for Windows to sync ssh keys from host to guest
+  if Vagrant::Util::Platform.windows?
+
+    # Read host machine SSH keys
+    ssh_private_key = File.read(File.join(Dir.home, ".ssh", "id_rsa"))
+    ssh_public_key = File.read(File.join(Dir.home, ".ssh", "id_rsa.pub"))
+
+    # Copy private key to VM root 
+    config.vm.provision :shell, :inline => "echo \"Windows Specific: Copying host private SSH key\" && mkdir -p /home/vagrant/.ssh && echo \"#{ssh_private_key}\" > /home/vagrant/.ssh/id_rsa", run: "always"
+    # Copy public key to VM authorized keys
+    config.vm.provision :shell, :inline => "echo \"Windows Specific: Copying host public SSH key to authoried keys file\" && echo \"#{ssh_public_key}\" | tee -a /home/vagrant/.ssh/authorized_keys", run: "always"
+
+  end 
+
   # Git Config
   git_name = CONF['git_name']
   git_email = CONF['git_email']
