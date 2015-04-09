@@ -3,9 +3,9 @@
 base_box: ubuntu/trusty64
 
 # Box Settings
-hostname: sandbox
+hostname: georgeff
 
-ip_address: 192.168.10.10
+ip_address: 192.168.300.30
 
 memory: 1024
 
@@ -25,7 +25,7 @@ mysql:
    root_password: password
    user: mike
    password: password
-   database: database
+   database: georgeff
 
 # Git Config
 git_name: Mike Georgeff
