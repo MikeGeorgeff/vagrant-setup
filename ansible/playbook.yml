@@ -8,4 +8,5 @@
     - nginx
     - php5
     - mysql
+    - sqlite
     - composer
