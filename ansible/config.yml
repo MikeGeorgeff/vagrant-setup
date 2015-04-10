@@ -5,7 +5,7 @@ base_box: ubuntu/trusty64
 # Box Settings
 hostname: georgeff
 
-ip_address: 192.168.300.30
+ip_address: 192.168.35.10
 
 memory: 1024
 

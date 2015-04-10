@@ -3,6 +3,5 @@
   sudo: yes
   apt: pkg={{ item }} state=latest
   with_items:
-  	- sqlite
     - sqlite3 
     - libsqlite3-dev
