@@ -20,6 +20,7 @@
     - php5-mcrypt
     - php5-mysql
     - php5-sqlite
+    - php5-gd
   notify: restart php5-fpm
 
 - name: ensure the timezone is set in fpm php.ini
